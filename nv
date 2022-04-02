@@ -1,0 +1,48 @@
+#!/bin/bash
+# netview - 
+#  Created: Sat 05 Mar 2022 08:46:49 AM CST
+#  Updated: Wed 09 Mar 2022 11:40:16 AM CST added ipa
+#  Updated: Thu 10 Mar 2022 09:58:19 AM CST added dv variable for interface
+# 
+dv=wlp2s0
+echo "netview - network interface set to: " $dv
+PS3='Well?: '
+program=("ipa" "nload" "vnstat" "iftop" "syslog" "arpscan" "Quit")
+select fav in "${program[@]}"; do
+    case $fav in
+        "ipa")
+            #echo "ip addresses"
+            echo "External IP Address:"
+            wget -qO- http://ipecho.net/plain | xargs echo
+            echo "Internal IP Address:"
+            hostname -I | awk '{print $1}'
+            ;;
+            
+        "nload")
+            #echo "network load nload"
+            nload device $dv
+            ;;      
+        "vnstat")
+            # echo "vnstat"
+            vnstat -l -i $dv
+            ;;
+        "iftop")
+            #echo "iftop"
+            sudo iftop -P -i $dv
+	        #break
+            ;;
+        "syslog")
+            #echo "syslog"
+            tail -f /var/log/syslog
+	        #break
+            ;;
+        "arpscan")
+            arpscan 
+            ;;        
+        "Quit")
+            echo "User requested exit"
+            exit
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done

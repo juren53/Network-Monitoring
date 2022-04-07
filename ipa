@@ -1,0 +1,9 @@
+#!/bin/bash
+# ipa - shell script that reports External and Internal IP addresses
+#  Created: Wed 09 Mar 2022 08:26:03 AM CST by JAU
+#
+clear
+echo "External IP Address"
+wget -qO- http://ipecho.net/plain | xargs echo
+echo "Internal IP Address"
+hostname -I | awk '{print $1}'
